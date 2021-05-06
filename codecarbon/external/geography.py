@@ -11,7 +11,7 @@ import requests
 
 from codecarbon.core.cloud import get_env_cloud_details
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("codecarbon")
 
 
 @dataclass

@@ -15,7 +15,7 @@ from codecarbon.core.units import Power
 POWER_CONSTANT = 85
 CONSUMPTION_PERCENTAGE_CONSTANT = 0.5
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("codecarbon")
 
 
 @dataclass

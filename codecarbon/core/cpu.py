@@ -16,7 +16,7 @@ import pandas as pd
 from codecarbon.core.rapl import RAPLFile
 from codecarbon.input import DataSource
 
-logger = getLogger(__name__)
+logger = getLogger("codecarbon")
 
 
 def is_powergadget_available():

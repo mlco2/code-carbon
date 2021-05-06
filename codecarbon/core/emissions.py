@@ -14,7 +14,7 @@ from codecarbon.core.units import EmissionsPerKwh, Energy
 from codecarbon.external.geography import CloudMetadata, GeoMetadata
 from codecarbon.input import DataSource, DataSourceException
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("codecarbon")
 
 
 class Emissions:

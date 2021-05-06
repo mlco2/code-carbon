@@ -13,7 +13,7 @@ from dataclasses import dataclass
 
 import requests
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger("codecarbon")
 
 
 @dataclass
@@ -84,9 +84,9 @@ class HTTPOutput(BaseOutput):
             payload["user"] = getpass.getuser()
             resp = requests.post(self.endpoint_url, json=payload, timeout=10)
             if resp.status_code != 201:
-                LOGGER.warning(
+                logger.warning(
                     "CODECARBON : HTTP Output returned an unexpected status code: ",
                     resp,
                 )
         except Exception as e:
-            LOGGER.error(e, exc_info=True)
+            logger.error(e, exc_info=True)

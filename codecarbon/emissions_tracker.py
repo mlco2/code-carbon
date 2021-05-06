@@ -10,7 +10,7 @@ import uuid
 from abc import ABC, abstractmethod
 from datetime import datetime
 from functools import wraps
-from typing import Callable, List, Optional
+from typing import Callable, List, Optional, Union
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -18,7 +18,7 @@ from codecarbon.core import cpu, gpu
 from codecarbon.core.config import get_hierarchical_config, parse_gpu_ids
 from codecarbon.core.emissions import Emissions
 from codecarbon.core.units import Energy, Time
-from codecarbon.core.util import suppress
+from codecarbon.core.util import suppress, set_log_level
 from codecarbon.external.geography import CloudMetadata, GeoMetadata
 from codecarbon.external.hardware import CPU, GPU
 from codecarbon.input import DataSource
@@ -27,7 +27,7 @@ from codecarbon.output import BaseOutput, EmissionsData, FileOutput, HTTPOutput
 logging.getLogger("codecarbon").setLevel(
     level=os.environ.get("CODECARBON_LOGLEVEL", "WARN")
 )
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("codecarbon")
 
 # /!\ Warning: current implementation prevents the user from setting any value to None
 # from the script call
@@ -63,6 +63,7 @@ class BaseEmissionsTracker(ABC):
         gpu_ids: Optional[List] = None,
         emissions_endpoint: Optional[str] = None,
         co2_signal_api_token: Optional[str] = None,
+        log_level: Optional[Union[int, str]] = None,
     ):
         """
         :param project_name: Project name for current experiment run, default name
@@ -79,48 +80,65 @@ class BaseEmissionsTracker(ABC):
                                    data
         :param co2_signal_api_token: API token for co2signal.com (requires sign-up for
                                      free beta)
+        :param log_level: Global codecarbon log level. Accepts one of:
+                            {"debug", "info", "warning", "error", "critical"}.
+                          Defaults to "info".
         """
         conf = get_hierarchical_config()
+
+        self._log_level = (
+            log_level if log_level is not None else conf.get("log_level", "info")
+        )
+        set_log_level(self._log_level)
+
         self._project_name: str = (
             project_name
             if project_name is not None
             else conf.get("project_name", "codecarbon")
         )
+
         self._measure_power_secs: int = (
             measure_power_secs
             if measure_power_secs is not None
             else conf.getint("measure_power_secs", 15)
         )
+
         self._output_dir: str = (
             output_dir if output_dir is not None else conf.get("output_dir", ".")
         )
-        self._start_time: Optional[float] = None
-        self._last_measured_time: float = time.time()
-        self._total_energy: Energy = Energy.from_energy(kwh=0)
-        self._scheduler = BackgroundScheduler()
-        self._hardware = list()
 
         self._emissions_endpoint = (
             emissions_endpoint
             if emissions_endpoint is not None
             else conf.get("emissions_endpoint", None)
         )
+
         self._co2_signal_api_token = (
             co2_signal_api_token
             if co2_signal_api_token is not None
             else conf.get("co2_signal_api_token", None)
         )
+
         self._save_to_file = (
             save_to_file
             if save_to_file is not None
             else conf.getboolean("save_to_file", True)
         )
+
+        self._start_time: Optional[float] = None
+        self._last_measured_time: float = time.time()
+        self._total_energy: Energy = Energy.from_energy(kwh=0)
+        self._scheduler = BackgroundScheduler()
+        self._hardware = list()
+
         if self._save_to_file == "False":
             self._save_to_file = False
+
         self._gpu_ids = gpu_ids if gpu_ids is not None else conf.get("gpu_ids", None)
         if isinstance(self._gpu_ids, str):
             self._gpu_ids = parse_gpu_ids(self._gpu_ids)
 
+        # Hardware detection
         if gpu.is_gpu_details_available():
             logger.info("CODECARBON : Tracking Nvidia GPU via pynvml")
             self._hardware.append(GPU.from_utils(self._gpu_ids))
@@ -134,7 +152,8 @@ class BaseEmissionsTracker(ABC):
             self._hardware.append(CPU.from_utils(self._output_dir, "intel_rapl"))
         else:
             logger.warning(
-                "CODECARBON : No CPU tracking mode found. Falling back on CPU constant mode."
+                "CODECARBON : No CPU tracking mode found. "
+                + "Falling back on CPU constant mode."
             )
             logger.info("CODECARBON : Tracking using constant")
             tdp = cpu.TDP().tdp
@@ -142,7 +161,8 @@ class BaseEmissionsTracker(ABC):
                 self._hardware.append(CPU.from_utils(self._output_dir, "constant", tdp))
             else:
                 logger.warning(
-                    "CODECARBON : Failed to match CPU TDP constant. Falling back on a global constant."
+                    "CODECARBON : Failed to match CPU TDP constant. "
+                    + "Falling back on a global constant."
                 )
                 self._hardware.append(CPU.from_utils(self._output_dir, "constant"))
 
@@ -424,6 +444,7 @@ def track_emissions(
     cloud_provider: Optional[str] = None,
     cloud_region: Optional[str] = None,
     gpu_ids: Optional[List] = None,
+    log_level: Optional[Union[int, str]] = None,
 ):
     """
     Decorator that supports both `EmissionsTracker` and `OfflineEmissionsTracker`
@@ -452,6 +473,10 @@ def track_emissions(
                                             blob/master/codecarbon/data/cloud/impact.csv
                          for a list of cloud regions
     :param gpu_ids: User-specified known gpu ids to track, defaults to None
+    :param log_level: Global codecarbon log level. Accepts one of:
+                        {"debug", "info", "warning", "error", "critical"}.
+                      Defaults to "info".
+
     :return: The decorated function
     """
 
@@ -473,6 +498,7 @@ def track_emissions(
                     cloud_provider=cloud_provider,
                     cloud_region=cloud_region,
                     gpu_ids=gpu_ids,
+                    log_level=log_level
                 )
                 tracker.start()
                 fn(*args, **kwargs)
@@ -484,6 +510,7 @@ def track_emissions(
                     output_dir=output_dir,
                     save_to_file=save_to_file,
                     gpu_ids=gpu_ids,
+                    log_level=log_level
                 )
                 tracker.start()
                 fn(*args, **kwargs)

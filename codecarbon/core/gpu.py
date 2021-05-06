@@ -22,7 +22,7 @@ from logging import getLogger
 
 import pynvml
 
-logger = getLogger(__name__)
+logger = getLogger("codecarbon")
 
 
 def to_utf8(str_or_bytes):

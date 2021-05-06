@@ -24,7 +24,7 @@ from typing import Any, Dict, Optional
 
 import requests
 
-LOGGER = getLogger(__name__)
+logger = getLogger("codecarbon")
 
 
 def postprocess_gcp_cloud_metadata(cloud_metadata):
@@ -91,7 +91,7 @@ def get_env_cloud_details(timeout=1):
 
             return {"provider": provider, "metadata": response_data}
         except Exception as e:
-            LOGGER.debug(
+            logger.debug(
                 "Not running on %s, couldn't retrieving metadata: %r", provider, e
             )
 
