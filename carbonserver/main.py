@@ -3,6 +3,7 @@ from carbonserver.database import models
 from carbonserver.api.dependencies import get_query_token
 from carbonserver.api.routers import (
     emissions,
+    runs,
     experiments,
     projects,
     organizations,
@@ -25,7 +26,7 @@ app.include_router(experiments.router)
 app.include_router(projects.router)
 app.include_router(teams.router)
 app.include_router(organizations.router)
-
+app.include_router(runs.router)
 
 @app.get("/")
 def default():

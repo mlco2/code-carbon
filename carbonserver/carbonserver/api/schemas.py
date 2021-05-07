@@ -28,13 +28,7 @@ class EmissionBase(BaseModel):
     energy_consumed: float = Field(
         ..., gt=0, description="The energy_consumed must be greater than zero"
     )
-    country_name: Optional[str] = None
-    country_iso_code: Optional[str] = None
-    region: Optional[str] = None
-    on_cloud: bool
-    cloud_provider: Optional[str] = None
-    cloud_region: Optional[str] = None
-
+ 
     class Config:
         # orm_mode = True
         schema_extra = {
@@ -44,12 +38,12 @@ class EmissionBase(BaseModel):
                 "duration": 98745,
                 "emissions": 1.548444,
                 "energy_consumed": 57.21874,
-                "country_name": "France",
-                "country_iso_code": "FRA",
-                "region": "france",
-                "on_cloud": True,
-                "cloud_provider": "aws",
-                "cloud_region": "eu-west-1a",
+                #"country_name": "France",
+                #"country_iso_code": "FRA",
+                #"region": "france",
+                #"on_cloud": True,
+                #"cloud_provider": "aws",
+                #"cloud_region": "eu-west-1a",
             }
         }
 
@@ -62,13 +56,33 @@ class Emission(EmissionBase):
     id: int
 
 
+# Run 
+class RunBase(BaseModel):
+    timestamp: datetime
+    experiment_id: str
+    emission_id:str
+
+class RunCreate(RunBase):
+    pass
+
+class Run(RunBase):
+    id:int
+
+
 # Experiment
 class ExperimentBase(BaseModel):
     timestamp: datetime
     name: str
     description: str
     is_active: bool
-    project_id: int
+    country_name: Optional[str] = None
+    country_iso_code: Optional[str] = None
+    region: Optional[str] = None
+    on_cloud: bool
+    cloud_provider: Optional[str] = None
+    cloud_region: Optional[str] = None
+    emission_id: int
+    project_id:int
 
 
 class ExperimentCreate(ExperimentBase):
