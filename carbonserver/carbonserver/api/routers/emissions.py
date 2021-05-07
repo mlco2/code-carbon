@@ -30,18 +30,16 @@ async def read_emission(
     return emission
 
 
-@router.get("/emissions/{experiment_id}", tags=["emissions"])
+@router.get("/emissions/{run_id}", tags=["emissions"])
 async def read_experiment_emissions(
-    experiment_id: str = Path(..., title="The ID of the experiment to get"),
+    run_id: str = Path(..., title="The ID of the experiment to get"),
     db: Session = Depends(get_db),
 ):
     repository_emissions = SqlAlchemyRepository(db)
-    experiment_emissions = repository_emissions.get_emissions_from_experiment(
-        experiment_id
-    )
+    experiment_emissions = repository_emissions.get_emissions_from_run(run_id)
     if experiment_emissions is None:
         raise HTTPException(
             status_code=404,
-            detail=f"Emission not found for experiment_id {experiment_id}",
+            detail=f"Emission not found for run_id {run_id}",
         )
     return experiment_emissions

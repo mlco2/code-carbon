@@ -32,12 +32,12 @@ class SqlAlchemyRepository(Emissions):
             duration=emission.duration,
             emissions=emission.emissions,
             energy_consumed=emission.energy_consumed,
-            #country_name=emission.country_name,
-            #country_iso_code=emission.country_iso_code,
-            #region=emission.region,
-            #on_cloud=emission.on_cloud,
-            #cloud_provider=emission.cloud_provider,
-            #cloud_region=emission.cloud_region,
+            # country_name=emission.country_name,
+            # country_iso_code=emission.country_iso_code,
+            # region=emission.region,
+            # on_cloud=emission.on_cloud,
+            # cloud_provider=emission.cloud_provider,
+            # cloud_region=emission.cloud_region,
             experiment_id=emission.experiment_id,
         )
 
@@ -51,13 +51,13 @@ class SqlAlchemyRepository(Emissions):
             duration=emission.duration,
             emissions=emission.emissions,
             energy_consumed=emission.energy_consumed,
-            #country_name=emission.country_name,
-            #country_iso_code=emission.country_iso_code,
-            #region=emission.region,
-            #on_cloud=emission.on_cloud,
-            #cloud_provider=emission.cloud_provider,
-            #cloud_region=emission.cloud_region,
-            experiment_id=emission.experiment_id,
+            # country_name=emission.country_name,
+            # country_iso_code=emission.country_iso_code,
+            # region=emission.region,
+            # on_cloud=emission.on_cloud,
+            # cloud_provider=emission.cloud_provider,
+            # cloud_region=emission.cloud_region,
+            run_id=emission.run_id,
         )
         self.db.add(db_emission)
         self.db.commit()
@@ -79,16 +79,14 @@ class SqlAlchemyRepository(Emissions):
         else:
             return self.get_db_to_class(e)
 
-    def get_emissions_from_experiment(self, experiment_id) -> List[schemas.Emission]:
-        """Find the emissions from an experiment in database and return it
+    def get_emissions_from_run(self, run_id) -> List[schemas.Emission]:
+        """Find the emissions from an run in database and return it
 
-        :experiment_id: The id of the experiment to retreive emissions from.
+        :run_id: The id of the run to retreive emissions from.
         :returns: An Emission in pyDantic BaseModel format.
         :rtype: List[schemas.Emission]
         """
-        res = self.db.query(models.Emission).filter(
-            models.Emission.experiment_id == experiment_id
-        )
+        res = self.db.query(models.Emission).filter(models.Emission.run_id == run_id)
         if res.first() is None:
             return []
         else:
@@ -113,12 +111,12 @@ class InMemoryRepository(Emissions):
                 duration=emission.duration,
                 emissions=emission.emissions,
                 energy_consumed=emission.energy_consumed,
-                #country_name=emission.country_name,
-                #country_iso_code=emission.country_iso_code,
-                #region=emission.region,
-                #on_cloud=emission.on_cloud,
-                #cloud_provider=emission.cloud_provider,
-                #cloud_region=emission.cloud_region,
+                # country_name=emission.country_name,
+                # country_iso_code=emission.country_iso_code,
+                # region=emission.region,
+                # on_cloud=emission.on_cloud,
+                # cloud_provider=emission.cloud_provider,
+                # cloud_region=emission.cloud_region,
                 experiment_id=emission.experiment_id,
             )
         )
@@ -130,12 +128,12 @@ class InMemoryRepository(Emissions):
             duration=emission.duration,
             emissions=emission.emissions,
             energy_consumed=emission.energy_consumed,
-            #country_name=emission.country_name,
-            #country_iso_code=emission.country_iso_code,
-            #region=emission.region,
-            #on_cloud=emission.on_cloud,
-            #cloud_provider=emission.cloud_provider,
-            #cloud_region=emission.cloud_region,
+            # country_name=emission.country_name,
+            # country_iso_code=emission.country_iso_code,
+            # region=emission.region,
+            # on_cloud=emission.on_cloud,
+            # cloud_provider=emission.cloud_provider,
+            # cloud_region=emission.cloud_region,
             experiment_id=emission.experiment_id,
         )
 
@@ -147,21 +145,21 @@ class InMemoryRepository(Emissions):
             duration=first_emission.duration,
             emissions=first_emission.emissions,
             energy_consumed=first_emission.energy_consumed,
-            #country_name=first_emission.country_name,
-            #country_iso_code=first_emission.country_iso_code,
-            #region=first_emission.region,
-            #on_cloud=first_emission.on_cloud,
-            #cloud_provider=first_emission.cloud_provider,
-            #cloud_region=first_emission.cloud_region,
+            # country_name=first_emission.country_name,
+            # country_iso_code=first_emission.country_iso_code,
+            # region=first_emission.region,
+            # on_cloud=first_emission.on_cloud,
+            # cloud_provider=first_emission.cloud_provider,
+            # cloud_region=first_emission.cloud_region,
             experiment_id=first_emission.experiment_id,
         )
 
-    def get_emissions_from_experiment(self, experiment_id) -> List[schemas.Emission]:
+    def get_emissions_from_run(self, run_id) -> List[schemas.Emission]:
         print(len(self.emissions))
         stored_emissions = [
             stored_emission
             for stored_emission in self.emissions
-            if stored_emission.experiment_id == experiment_id
+            if stored_emission.run_id == run_id
         ]
         emissions: List[schemas.Emission] = []
         for emission in stored_emissions:

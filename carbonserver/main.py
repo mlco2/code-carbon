@@ -28,6 +28,7 @@ app.include_router(teams.router)
 app.include_router(organizations.router)
 app.include_router(runs.router)
 
+
 @app.get("/")
 def default():
     return {"docs": "Please go to /docs"}

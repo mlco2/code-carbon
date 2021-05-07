@@ -12,13 +12,13 @@ router = APIRouter(
 )
 
 
-@router.put("/experiment", tags=["experiments"])
+@router.put("/experiment", tags=["experiments"], status_code=201)
 def add_experiment(experiment: ExperimentCreate, db: Session = Depends(get_db)):
     # crud_experiments.save_experiment(db, experiment)
     repository_experiment = SqlAlchemyRepository(db)
     repository_experiment.save_experiment(experiment)
-    
-    raise HTTPException(status_code=404, detail="Not Found")
+
+    # raise HTTPException(status_code=404, detail="Not Found")
 
 
 @router.get("/experiment/{experiment_id}", tags=["experiments"])

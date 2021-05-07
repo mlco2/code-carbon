@@ -16,7 +16,6 @@ class SqlAlchemyRepository(Experiment):
     def __init__(self, db: Session):
         self.db = db
 
-
     def get_db_to_class(self, experiment: models.Experiment) -> schemas.Experiment:
         """Convert a models.Experiment to a schemas.Experiment
 
@@ -36,10 +35,9 @@ class SqlAlchemyRepository(Experiment):
             on_cloud=experiment.on_cloud,
             cloud_provider=experiment.cloud_provider,
             cloud_region=experiment.cloud_region,
-            emission_id=experiment.emission_id,
+            # emission_id=experiment.emission_id,
             project_id=experiment.project_id,
         )
- 
 
     def save_experiment(self, experiment: schemas.ExperimentCreate):
         # TODO : save experiment in database and get her ID
@@ -54,8 +52,8 @@ class SqlAlchemyRepository(Experiment):
             cloud_provider=experiment.cloud_provider,
             cloud_region=experiment.cloud_region,
             is_active=experiment.is_active,
-            emission_id=experiment.emission_id,
-            project_id = experiment.project_id,
+            # emission_id=experiment.emission_id,
+            project_id=experiment.project_id,
         )
         self.db.add(db_experiment)
         self.db.commit()
@@ -79,8 +77,8 @@ class SqlAlchemyRepository(Experiment):
         else:
             return self.get_db_to_class(e)
 
-    #def get_experiments_from_experiment(self, experiment_id):
-        # TODO : get experiments from experiment id in database
+    # def get_experiments_from_experiment(self, experiment_id):
+    # TODO : get experiments from experiment id in database
     #    return True
 
     def get_experiment_from_emission(self, emission_id) -> List[schemas.Experiment]:
@@ -123,8 +121,8 @@ class InMemoryRepository(Experiment):
                 cloud_provider=experiment.cloud_provider,
                 cloud_region=experiment.cloud_region,
                 is_active=experiment.is_active,
-                emission_id=experiment.emission_id,
-                project_id= experiment.project_id,
+                # emission_id=experiment.emission_id,
+                project_id=experiment.project_id,
             )
         )
 
@@ -142,7 +140,7 @@ class InMemoryRepository(Experiment):
             cloud_provider=experiment.cloud_provider,
             cloud_region=experiment.cloud_region,
             is_active=experiment.is_active,
-            emission_id=experiment.emission_id,
+            # emission_id=experiment.emission_id,
             project_id=experiment.project_id,
         )
 
@@ -162,7 +160,7 @@ class InMemoryRepository(Experiment):
                     cloud_provider=experiment.cloud_provider,
                     cloud_region=experiment.cloud_region,
                     is_active=experiment.is_active,
-                    emission_id=experiment.emission_id,
+                    # emission_id=experiment.emission_id,
                     project_id=experiment.project_id,
                 )
             )

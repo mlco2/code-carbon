@@ -18,7 +18,7 @@ from pydantic import BaseModel, Field
 
 class EmissionBase(BaseModel):
     timestamp: datetime
-    experiment_id: str
+    run_id: str
     duration: int = Field(
         ..., gt=0, description="The duration must be greater than zero"
     )
@@ -28,22 +28,22 @@ class EmissionBase(BaseModel):
     energy_consumed: float = Field(
         ..., gt=0, description="The energy_consumed must be greater than zero"
     )
- 
+
     class Config:
         # orm_mode = True
         schema_extra = {
             "example": {
                 "timestamp": "2021-04-04T08:43:00+02:00",
-                "experiment_id": "40088f1a-d28e-4980-8d80-bf5600056a14",
+                "run_id": "40088f1a-d28e-4980-8d80-bf5600056a14",
                 "duration": 98745,
                 "emissions": 1.548444,
                 "energy_consumed": 57.21874,
-                #"country_name": "France",
-                #"country_iso_code": "FRA",
-                #"region": "france",
-                #"on_cloud": True,
-                #"cloud_provider": "aws",
-                #"cloud_region": "eu-west-1a",
+                # "country_name": "France",
+                # "country_iso_code": "FRA",
+                # "region": "france",
+                # "on_cloud": True,
+                # "cloud_provider": "aws",
+                # "cloud_region": "eu-west-1a",
             }
         }
 
@@ -56,17 +56,19 @@ class Emission(EmissionBase):
     id: int
 
 
-# Run 
+# Run
 class RunBase(BaseModel):
     timestamp: datetime
     experiment_id: str
-    emission_id:str
+    emission_id: str
+
 
 class RunCreate(RunBase):
     pass
 
+
 class Run(RunBase):
-    id:int
+    id: int
 
 
 # Experiment
@@ -82,7 +84,7 @@ class ExperimentBase(BaseModel):
     cloud_provider: Optional[str] = None
     cloud_region: Optional[str] = None
     emission_id: int
-    project_id:int
+    project_id: int
 
 
 class ExperimentCreate(ExperimentBase):
