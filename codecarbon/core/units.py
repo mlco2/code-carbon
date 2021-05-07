@@ -83,6 +83,12 @@ class Power:
     def from_watts(cls, watts: float) -> "Power":
         return cls(kW=watts * Power.WATTS_TO_KILO_WATTS)
 
+    @property
+    def W(self):
+        if not isinstance(self.kW, float):
+            return self.kW
+        return self.kW * 1000
+
 
 @dataclass
 class Time:

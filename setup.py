@@ -12,16 +12,17 @@ DEPENDENCIES = [
     "pandas",
     "pynvml",
     "requests",
+    "psutil",
     "py-cpuinfo",
 ]
 
-TEST_DEPENDENCIES = ["mock", "pytest", "responses", "tox"]
+TEST_DEPENDENCIES = ["mock", "pytest", "responses", "tox", "numpy"]
 
 
 setuptools.setup(
     name="codecarbon",
     version="1.2.0",
-    author="BCG GAMMA, Comet.ml, Haverford College, MILA",
+    author="Mila, DataForGood, BCG GAMMA, Comet.ml, Haverford College",
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(

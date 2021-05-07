@@ -20,7 +20,7 @@ from codecarbon.core.emissions import Emissions
 from codecarbon.core.units import Energy, Time
 from codecarbon.core.util import suppress
 from codecarbon.external.geography import CloudMetadata, GeoMetadata
-from codecarbon.external.hardware import CPU, GPU
+from codecarbon.external.hardware import CPU, GPU, RAM
 from codecarbon.input import DataSource
 from codecarbon.output import BaseOutput, EmissionsData, FileOutput, HTTPOutput
 
@@ -98,7 +98,7 @@ class BaseEmissionsTracker(ABC):
         self._last_measured_time: float = time.time()
         self._total_energy: Energy = Energy.from_energy(kwh=0)
         self._scheduler = BackgroundScheduler()
-        self._hardware = list()
+        self._hardware = [RAM()]
 
         self._emissions_endpoint = (
             emissions_endpoint
