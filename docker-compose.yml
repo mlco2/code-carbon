@@ -1,0 +1,71 @@
+version: '3.7'
+services:
+  # codecarbon_api:
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/Dockerfile
+  #   networks:
+  #     - codecarbon_net
+  #   ports:
+  #   - 5080:5000
+  #   environment:
+  #     DATABASE_URL: ${DATABASE_URL}
+  #   volumes:
+  #     - .:/opt/codecarbon/api
+  #   depends_on:
+  #     - postgres
+  #   restart: unless-stopped
+
+  # codecarbon_package:
+  #   build:
+  #     context: ./codecarbon/
+  #     dockerfile: ./docker/Dockerfile
+  #   networks:
+  #     - codecarbon_net
+  #   volumes:
+  #     - ./codecarbon:/opt/codecarbon
+  #   depends_on:
+  #     - codecarbon_api
+  #   restart: unless-stopped
+
+  postgres:
+    container_name: ${DATABASE_HOST:-postgres_codecarbon}
+    environment:
+      HOSTNAME: ${DATABASE_HOST:-postgres_codecarbon}
+      POSTGRES_DB: ${DATABASE_NAME:-codecarbon_db}
+      POSTGRES_PASSWORD: ${DATABASE_PASS:-supersecret}
+      POSTGRES_USER: ${DATABASE_USER:-codecarbon-user}
+    image: postgres:12
+    networks:
+      - codecarbon_net
+    ports:
+    - 5480:5432
+    restart: unless-stopped
+    volumes:
+    - postgres_data:/var/lib/postgresql/data:rw
+
+  pgadmin:
+    container_name: pgadmin_codecarbon
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-test@test.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-test}
+    volumes:
+       - pgadmin:/root/.pgadmin
+       - ./docker/pgpassfile:/pgadmin4/pgpassfile
+       - ./docker/pgadmin-servers.json:/pgadmin4/servers.json
+    ports:
+      - "${PGADMIN_PORT:-5080}:80"
+    networks:
+      - codecarbon_net
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    name: postgres_codecarbon_data
+  pgadmin:
+    name: pgadmin_codecarbon_data
+
+networks:
+  codecarbon_net:
+    name: codecarbon_network
