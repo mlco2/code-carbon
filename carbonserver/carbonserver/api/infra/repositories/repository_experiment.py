@@ -1,7 +1,7 @@
 # from uuid import uuid4 as uuid
 from typing import List
 
-from carbonserver.api.domain.experiment import ExperimentInterface
+from carbonserver.api.domain.experiment import Experiment
 from carbonserver.database import schemas, models
 from sqlalchemy.orm import Session
 
