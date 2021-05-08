@@ -1,6 +1,3 @@
-# from uuid import uuid4 as uuid
-from typing import List
-
 from carbonserver.api.domain.run import RunInterface
 from carbonserver.database import schemas, models
 from sqlalchemy.orm import Session
@@ -32,12 +29,10 @@ class SqlAlchemyRepository(RunInterface):
 
     def add_save_run(self, run: schemas.RunCreate):
         """Save an Run to the database.
-
-        :emission: An Run in pyDantic BaseModel format.
+        :run: An Run in pyDantic BaseModel format.
         """
         db_run = models.Run(
             timestamp=run.timestamp,
-            ##emission_id=run.emission_id,
             experiment_id=run.experiment_id,
         )
         self.db.add(db_run)

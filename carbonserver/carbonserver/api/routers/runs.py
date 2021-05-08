@@ -4,7 +4,7 @@ from carbonserver.api.infra.repositories.repository_runs import (
     SqlAlchemyRepository,
 )
 
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 router = APIRouter(
@@ -16,3 +16,4 @@ router = APIRouter(
 def add_run(run: RunCreate, db: Session = Depends(get_db)):
     repository_runs = SqlAlchemyRepository(db)
     repository_runs.add_save_run(run)
+    # TODO : Return Error when experiment does not exist

@@ -1,7 +1,5 @@
 import abc
-from typing import List
-
-from carbonserver.database import schemas, models
+from carbonserver.database import schemas
 
 
 class RunInterface(abc.ABC):

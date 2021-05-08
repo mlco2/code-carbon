@@ -22,11 +22,11 @@ app = FastAPI(dependencies=[Depends(get_query_token)])
 
 
 app.include_router(emissions.router)
+app.include_router(runs.router)
 app.include_router(experiments.router)
 app.include_router(projects.router)
 app.include_router(teams.router)
 app.include_router(organizations.router)
-app.include_router(runs.router)
 
 
 @app.get("/")
