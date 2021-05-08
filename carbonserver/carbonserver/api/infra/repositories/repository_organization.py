@@ -1,8 +1,7 @@
 from typing import List
 
 from carbonserver.api.domain.organization import Organization
-from carbonserver.database import models
-from carbonserver.api import schemas
+from carbonserver.database import models, schemas
 
 from sqlalchemy.orm import Session
 

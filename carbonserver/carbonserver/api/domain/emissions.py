@@ -1,8 +1,7 @@
 import abc
 from typing import List
 
-from carbonserver.database import models
-from carbonserver.api import schemas
+from carbonserver.database import models, schemas
 
 
 class Emissions(abc.ABC):
@@ -19,5 +18,5 @@ class Emissions(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_emissions_from_experiment(self, experiment_id) -> List[schemas.Emission]:
+    def get_emissions_from_run(self, run_id) -> List[schemas.Emission]:
         raise NotImplementedError

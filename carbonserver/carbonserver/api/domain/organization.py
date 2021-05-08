@@ -1,4 +1,4 @@
-from carbonserver.api import schemas
+from carbonserver.database import schemas
 
 import abc
 

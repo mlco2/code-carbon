@@ -1,5 +1,7 @@
-# from database.Infra.SqlAlchemy import repository_organizations
 from carbonserver.database.schemas import OrganizationCreate
+from carbonserver.api.infra.repositories.repository_organization import (
+    SqlAlchemyRepository,
+)
 from carbonserver.api.dependencies import get_db, get_token_header
 from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
@@ -14,15 +16,16 @@ organizations_temp_db = []
 
 @router.put("/organization", tags=["organizations"])
 def add_organization(organization: OrganizationCreate, db: Session = Depends(get_db)):
-    # Remove next line when DB work
-    organizations_temp_db.append(organization.dict())
-    # crud_organizations.save_organization(db, organization)
+    repository_organizations = SqlAlchemyRepository(db)
+    repository_organizations.save_organization(organization)
+    # TODO : return the id of the organization
 
 
 @router.get("/organization/{organization_id}", tags=["organizations"])
 async def read_organization(
     organization_id: str = Path(..., title="The ID of the organization to get")
 ):
+    # TODO : call get_one_organization(organization_id)
     # organization = crud_organizations.get_one_organization(organization_id)
     # if organization_id is False:
     #     raise HTTPException(status_code=404, detail="Item not found")
