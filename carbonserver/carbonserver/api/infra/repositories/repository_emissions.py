@@ -1,10 +1,7 @@
 # from uuid import uuid4 as uuid
 from typing import List
-
 from carbonserver.api.domain.emissions import Emissions
-from carbonserver.database import models
-from carbonserver.api import schemas
-
+from carbonserver.database import models, schemas
 from sqlalchemy.orm import Session
 
 """

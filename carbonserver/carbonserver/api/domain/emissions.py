@@ -1,8 +1,7 @@
 import abc
 from typing import List
 
-from carbonserver.database import models
-from carbonserver.api import schemas
+from carbonserver.database import models, schemas
 
 
 class Emissions(abc.ABC):
