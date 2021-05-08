@@ -9,7 +9,7 @@ DEPENDENCIES = [
     "sqlalchemy",
 ]
 
-TEST_DEPENDENCIES = ["mock", "pytest", "responses", "tox"]
+TEST_DEPENDENCIES = ["mock", "pytest", "responses", "tox", "pydantic[email]"]
 
 
 setuptools.setup(
